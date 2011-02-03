@@ -15,10 +15,12 @@ typedef struct _hex_gene {
 
 @interface HexCritter : NSObject {
 	hex_gene *genome;
+	int gene_count;
 }
 
 @property (readonly) hex_gene *genome;
+@property (readonly) int gene_count;
 
-- (hex_gene)randomGene;
++ (HexCritter *)critterByBreeding:(HexCritter *)critter with:(HexCritter *)otherCritter;
 
 @end

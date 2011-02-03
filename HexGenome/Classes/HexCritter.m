@@ -9,9 +9,18 @@
 #import "HexCritter.h"
 
 
+@interface HexCritter ()
+- (hex_gene *)randomGenome;
+- (hex_gene)randomGene;
+- (void)setGenome:(hex_gene *)newGenome;
+@end
+
+
+
 @implementation HexCritter
 
 @synthesize genome;
+@synthesize gene_count;
 
 - (void)dealloc;
 {
@@ -26,24 +35,33 @@
 	if (!(self = [super init]))
 		return nil;
 	
+	hex_gene *newGenome = [self randomGenome];
+	[self setGenome:newGenome];
+	
+	return self;
+}
+
+- (hex_gene *)randomGenome;
+{
 	float prob = 0.9;
 	float max_size = 100;
 	
 	int genome_size = 100;
-	genome = calloc(genome_size, sizeof(hex_gene));
+	hex_gene *newGenome = calloc(genome_size, sizeof(hex_gene));
 	
-	int gene_count = 0;
+	int geneCount = 0;
 	do {
-		if (gene_count >= genome_size) {
+		if (geneCount >= genome_size) {
 			genome_size = genome_size * 2;
-			genome = (hex_gene *)realloc(genome, genome_size * sizeof(hex_gene));
+			newGenome = (hex_gene *)realloc(newGenome, genome_size * sizeof(hex_gene));
 		}
-		genome[gene_count++] = [self randomGene];
-	} while ((float)random() / INT_MAX < prob && gene_count < max_size);
+		newGenome[geneCount++] = [self randomGene];
+	} while ((float)random() / INT_MAX < prob && geneCount < max_size);
 	
-	genome[gene_count].next_hex = -1;
+	newGenome[geneCount - 1].next_hex = -1;
+	NSLog(@"%d genes", geneCount);
 	
-	return self;
+	return newGenome;
 }
 
 - (hex_gene)randomGene;
@@ -52,6 +70,39 @@
 	gene.type = 0;
 	gene.next_hex = random() % 6;
 	return gene;
+}
+
++ (HexCritter *)critterByBreeding:(HexCritter *)critter with:(HexCritter *)otherCritter;
+{
+	int firstFlip = random() % (critter.gene_count - 1);
+	int secondFlip = random() % otherCritter.gene_count;
+	int genome_size = firstFlip + (otherCritter.gene_count - secondFlip);
+	
+	hex_gene *newGenome = calloc(genome_size, sizeof(hex_gene));
+	
+	for (int i = 0; i < firstFlip; i++) {
+		newGenome[i] = critter.genome[i];
+	}
+	for (int i = 0; i < (otherCritter.gene_count - secondFlip); i++) {
+		newGenome[firstFlip + i] = otherCritter.genome[secondFlip + i];
+	}
+	
+	HexCritter *child = [[self alloc] init];
+	[child setGenome:newGenome];
+	return [child autorelease];
+}
+
+- (void)setGenome:(hex_gene *)newGenome;
+{
+	if (genome)	free(genome), genome = NULL;
+	
+	genome = newGenome;
+	
+	gene_count = 0;
+	hex_gene gene;
+	do {
+		gene = genome[gene_count++];
+	} while (gene.next_hex != -1);
 }
 
 @end
