@@ -16,10 +16,15 @@
 
 @property (nonatomic, retain) IBOutlet HexCritterView *firstCritterView;
 @property (nonatomic, retain) IBOutlet HexCritterView *secondCritterView;
-@property (nonatomic, retain) IBOutlet HexCritterView *childCritterView;
+
+@property (nonatomic, retain) IBOutlet HexCritterView *childCritterView1;
+@property (nonatomic, retain) IBOutlet HexCritterView *childCritterView2;
+@property (nonatomic, retain) IBOutlet HexCritterView *childCritterView3;
+@property (nonatomic, retain) IBOutlet HexCritterView *childCritterView4;
+@property (nonatomic, retain) IBOutlet HexCritterView *childCritterView5;
+@property (nonatomic, retain) IBOutlet HexCritterView *childCritterView6;
 
 - (IBAction)shuffleAction:(id)sender;
-- (IBAction)breedAction:(id)sender;
 
 @end
 
