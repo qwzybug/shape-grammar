@@ -47,6 +47,9 @@
 		CGContextFillEllipseInRect(ctx, thisRect);
 		CGContextStrokeEllipseInRect(ctx, thisRect);
 		
+		if (gene.next_hex != -1)
+			sz = (sz + self.critter.genome[gene_num + 1].size) / 2;
+		
 		switch (gene.next_hex) {
 			case 0:
 				p = CGPointMake(p.x - 2 * V_V(sz).x, p.y - 2 * V_V(sz).y);
