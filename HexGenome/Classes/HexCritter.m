@@ -9,12 +9,30 @@
 #import "HexCritter.h"
 
 
+#define MUTATION_RATE 0.2
+
+
 @interface HexCritter ()
 - (hex_gene *)randomGenome;
 - (hex_gene)randomGene;
 - (void)setGenome:(hex_gene *)newGenome;
 @end
 
+
+hex_gene mutate(hex_gene gene) {
+	hex_gene new_gene = gene;
+	switch (random() % 3) {
+		case 0: // mutate gene type — nothing here yet
+		case 1: // mutate gene size
+			new_gene.size = random() % 10 + 5;
+			break;
+		case 2: // mutate position
+			new_gene.next_hex = gene.next_hex > -1 ? random() % 6 : -1; // should mutations be able to truncate a genome?
+			break;
+	}
+	NSLog(@"Mutated (%d %d %d) -> (%d %d %d)", gene.type, gene.size, gene.next_hex, new_gene.type, new_gene.size, new_gene.next_hex);
+	return new_gene;
+}
 
 
 @implementation HexCritter
@@ -59,7 +77,6 @@
 	} while ((float)random() / INT_MAX < prob && geneCount < max_size);
 	
 	newGenome[geneCount - 1].next_hex = -1;
-	NSLog(@"%d genes", geneCount);
 	
 	return newGenome;
 }
@@ -80,12 +97,14 @@
 	int genome_size = firstFlip + (otherCritter.gene_count - secondFlip);
 	
 	hex_gene *newGenome = calloc(genome_size, sizeof(hex_gene));
-	
+	hex_gene gene;
 	for (int i = 0; i < firstFlip; i++) {
-		newGenome[i] = critter.genome[i];
+		gene = critter.genome[i];
+		newGenome[i] = ((float)random() / INT_MAX < MUTATION_RATE) ? mutate(gene) : gene;
 	}
 	for (int i = 0; i < (otherCritter.gene_count - secondFlip); i++) {
-		newGenome[firstFlip + i] = otherCritter.genome[secondFlip + i];
+		gene = otherCritter.genome[secondFlip + i];
+		newGenome[firstFlip + i] = ((float)random() / INT_MAX < MUTATION_RATE) ? mutate(gene) : gene;
 	}
 	
 	HexCritter *child = [[self alloc] init];
