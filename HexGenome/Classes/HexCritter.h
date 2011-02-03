@@ -10,6 +10,7 @@
 
 typedef struct _hex_gene {
 	int type;
+	int size;
 	int next_hex; // -1 (none), clockwise from bottom 0-5
 } hex_gene;
 

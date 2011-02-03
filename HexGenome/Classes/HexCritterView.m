@@ -11,8 +11,8 @@
 
 #define SCALE 10.0
 
-#define V_H CGPointMake(SCALE + SCALE * sqrt(3) / 4, 0)
-#define V_V CGPointMake(0, SCALE * sqrt(3) / 2)
+#define V_H(sz) CGPointMake((sz) + (sz) * sqrt(3) / 4, 0)
+#define V_V(sz) CGPointMake(0, (sz) * sqrt(3) / 2)
 
 @implementation HexCritterView
 
@@ -41,28 +41,30 @@
 	do {
 		gene = self.critter.genome[gene_num];
 		
-		CGRect thisRect = CGRectMake(p.x - SCALE, p.y - SCALE, 2 * SCALE, 2 * SCALE);
+		int sz = gene.size;
+		
+		CGRect thisRect = CGRectMake(p.x - sz, p.y - sz, 2 * sz, 2 * sz);
 		CGContextFillEllipseInRect(ctx, thisRect);
 		CGContextStrokeEllipseInRect(ctx, thisRect);
 		
 		switch (gene.next_hex) {
 			case 0:
-				p = CGPointMake(p.x - 2 * V_V.x, p.y - 2 * V_V.y);
+				p = CGPointMake(p.x - 2 * V_V(sz).x, p.y - 2 * V_V(sz).y);
 				break;
 			case 1:
-				p = CGPointMake(p.x - V_H.x - V_V.x, p.y - V_H.y - V_V.y);
+				p = CGPointMake(p.x - V_H(sz).x - V_V(sz).x, p.y - V_H(sz).y - V_V(sz).y);
 				break;
 			case 2:
-				p = CGPointMake(p.x - V_H.x + V_V.x, p.y - V_H.y + V_V.y);
+				p = CGPointMake(p.x - V_H(sz).x + V_V(sz).x, p.y - V_H(sz).y + V_V(sz).y);
 				break;
 			case 3:
-				p = CGPointMake(p.x + 2 * V_V.x, p.y + 2 * V_V.y);
+				p = CGPointMake(p.x + 2 * V_V(sz).x, p.y + 2 * V_V(sz).y);
 				break;
 			case 4:
-				p = CGPointMake(p.x + V_H.x + V_V.x, p.y + V_H.y + V_V.y);
+				p = CGPointMake(p.x + V_H(sz).x + V_V(sz).x, p.y + V_H(sz).y + V_V(sz).y);
 				break;
 			case 5:
-				p = CGPointMake(p.x + V_H.x - V_V.x, p.y + V_H.y - V_V.y);
+				p = CGPointMake(p.x + V_H(sz).x - V_V(sz).x, p.y + V_H(sz).y - V_V(sz).y);
 				break;
 		}
 		

@@ -68,6 +68,7 @@
 {
 	hex_gene gene;
 	gene.type = 0;
+	gene.size = random() % 10 + 5;
 	gene.next_hex = random() % 6;
 	return gene;
 }
