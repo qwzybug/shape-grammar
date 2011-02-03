@@ -92,7 +92,7 @@ hex_gene mutate(hex_gene gene) {
 
 + (HexCritter *)critterByBreeding:(HexCritter *)critter with:(HexCritter *)otherCritter;
 {
-	int firstFlip = random() % (critter.gene_count - 1);
+	int firstFlip = random() % critter.gene_count;
 	int secondFlip = random() % otherCritter.gene_count;
 	int genome_size = firstFlip + (otherCritter.gene_count - secondFlip);
 	
